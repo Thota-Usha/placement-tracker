@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from .database import Base
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = "placement_users"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False)
@@ -41,7 +41,8 @@ class Application(Base):
     __tablename__ = "applications"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("placement_users.id"), nullable=False)
+
     drive_id = Column(Integer, ForeignKey("company_drives.id"), nullable=False)
     status = Column(String(50), default="Applied")  
     # Status options: "Applied", "OA_Scheduled", "Interview_Shortlisted", "Offered", "Rejected"
