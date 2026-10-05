@@ -76,12 +76,13 @@ The backend provides fully documented interactive OpenAPI/Swagger endpoints acce
 | `POST` | `/api/auth/register` | Register a new student profile | No |
 | `POST` | `/api/auth/login` | Authenticate student and obtain Bearer JWT token | No |
 | `GET` | `/api/auth/me` | Fetch authenticated student profile | **Yes (Bearer)** |
-| `GET` | `/api/auth/students` | List all registered students in the campus directory | No |
-| `GET` | `/api/drives/` | List campus recruitment drives with search and filters | No |
-| `GET` | `/api/drives/{id}` | Retrieve specific company drive details | No |
-| `POST` | `/api/apps/apply/{drive_id}` | Submit application with automated CGPA eligibility check | **Yes (Bearer)** |
-| `GET` | `/api/apps/my` | Retrieve student's applications and pipeline metrics | **Yes (Bearer)** |
-| `PUT` | `/api/apps/{app_id}/status` | Update application status (`OA_Scheduled`, `Offered`, etc.) | **Yes (Bearer)** |
+| `GET` | `/api/applications/registered-students` | Public live directory of all registered students | No |
+| `GET` | `/api/drives` | List campus recruitment drives with search and filters | No |
+| `GET` | `/api/drives/{drive_id}` | Retrieve specific company drive details | No |
+| `POST` | `/api/applications` | Submit application with automated CGPA eligibility check | **Yes (Bearer)** |
+| `GET` | `/api/applications` | Retrieve student's application history | **Yes (Bearer)** |
+| `GET` | `/api/applications/stats` | Application pipeline metrics (applied, OA, interviews, offers) | **Yes (Bearer)** |
+| `PUT` | `/api/applications/{app_id}` | Update application status (`OA_Scheduled`, `Offered`, etc.) | **Yes (Bearer)** |
 
 ---
 
