@@ -10,6 +10,7 @@ let isSignUpMode = false;
 document.addEventListener("DOMContentLoaded", () => {
   checkExistingAuth();
   loadDrives();
+  loadRegisteredStudents();
 });
 
 // --- Auth Handling ---
@@ -457,20 +458,93 @@ async function handleCreateDrive(e) {
 function switchTab(tab) {
   const drivesTab = document.getElementById("drivesTab");
   const appsTab = document.getElementById("appsTab");
+  const studentsTab = document.getElementById("studentsTab");
+
   const drivesBtn = document.getElementById("tabDrivesBtn");
   const appsBtn = document.getElementById("tabAppsBtn");
+  const studentsBtn = document.getElementById("tabStudentsBtn");
+
+  // Reset all tabs
+  drivesTab.classList.add("hidden");
+  appsTab.classList.add("hidden");
+  studentsTab.classList.add("hidden");
+
+  const inactiveClass = "pb-3 font-medium text-sm text-slate-500 hover:text-slate-800 flex items-center space-x-2";
+  const activeClass = "pb-3 font-semibold text-sm border-b-2 border-indigo-600 text-indigo-600 flex items-center space-x-2";
+
+  drivesBtn.className = inactiveClass;
+  appsBtn.className = inactiveClass;
+  studentsBtn.className = inactiveClass;
 
   if (tab === "drives") {
     drivesTab.classList.remove("hidden");
-    appsTab.classList.add("hidden");
-    drivesBtn.className = "pb-3 font-semibold text-sm border-b-2 border-indigo-600 text-indigo-600 flex items-center space-x-2";
-    appsBtn.className = "pb-3 font-medium text-sm text-slate-500 hover:text-slate-800 flex items-center space-x-2";
-  } else {
-    drivesTab.classList.add("hidden");
+    drivesBtn.className = activeClass;
+  } else if (tab === "apps") {
     appsTab.classList.remove("hidden");
-    appsBtn.className = "pb-3 font-semibold text-sm border-b-2 border-indigo-600 text-indigo-600 flex items-center space-x-2";
-    drivesBtn.className = "pb-3 font-medium text-sm text-slate-500 hover:text-slate-800 flex items-center space-x-2";
+    appsBtn.className = activeClass;
     loadUserApplications();
+  } else if (tab === "students") {
+    studentsTab.classList.remove("hidden");
+    studentsBtn.className = activeClass;
+    loadRegisteredStudents();
+  }
+}
+
+// --- Registered Students Directory ---
+async function loadRegisteredStudents() {
+  try {
+    const res = await fetch(`${API_BASE}/api/applications/registered-students`);
+    if (!res.ok) return;
+    const data = await res.json();
+
+    const badge = document.getElementById("studentsBadge");
+    const totalCount = document.getElementById("totalStudentsCount");
+    if (badge) badge.innerText = data.total_students;
+    if (totalCount) totalCount.innerText = data.total_students;
+
+    const tbody = document.getElementById("studentsTableBody");
+    if (!tbody) return;
+
+    if (data.students.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5" class="text-center py-8 text-slate-400">No students registered in database yet.</td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = data.students.map(s => `
+      <tr class="hover:bg-slate-50 transition">
+        <td class="py-4 px-6 flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center font-bold text-indigo-700 text-xs">
+            ${escapeHtml(s.name.charAt(0).toUpperCase())}
+          </div>
+          <div>
+            <p class="font-bold text-slate-800 text-sm">${escapeHtml(s.name)}</p>
+            <p class="text-xs text-slate-400">${escapeHtml(s.email)}</p>
+          </div>
+        </td>
+        <td class="py-4 px-6">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700">
+            ${escapeHtml(s.branch)}
+          </span>
+        </td>
+        <td class="py-4 px-6 font-bold ${s.cgpa >= 8.0 ? 'text-emerald-600' : 'text-slate-700'}">
+          ${s.cgpa.toFixed(2)}
+        </td>
+        <td class="py-4 px-6 font-semibold text-slate-700">
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold ${s.applications_count > 0 ? 'bg-indigo-50 text-indigo-700 border border-indigo-100' : 'bg-slate-50 text-slate-400'}">
+            ${s.applications_count} applied
+          </span>
+        </td>
+        <td class="py-4 px-6 text-xs text-slate-400">
+          ${s.created_at}
+        </td>
+      </tr>
+    `).join("");
+  } catch (err) {
+    console.error("Error loading registered students:", err);
   }
 }
 

@@ -138,3 +138,25 @@ def get_user_stats(
         "rejected": sum(1 for a in apps if a.status == "Rejected"),
     }
     return stats
+
+
+@router.get("/registered-students")
+def get_all_registered_students(db: Session = Depends(get_db)):
+    """Fetch all registered students, their CGPA, branch, and number of applications"""
+    users = db.query(User).order_by(User.created_at.desc()).all()
+    student_list = []
+    for u in users:
+        app_count = db.query(Application).filter(Application.user_id == u.id).count()
+        student_list.append({
+            "id": u.id,
+            "name": u.name,
+            "email": u.email,
+            "branch": u.branch or "CSE",
+            "cgpa": u.cgpa or 0.0,
+            "created_at": u.created_at.strftime("%Y-%m-%d %H:%M") if u.created_at else "Recent",
+            "applications_count": app_count
+        })
+    return {
+        "total_students": len(users),
+        "students": student_list
+    }
