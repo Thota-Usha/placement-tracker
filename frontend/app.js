@@ -269,6 +269,11 @@ async function loadUserApplications() {
     const res = await fetch(`${API_BASE}/api/applications`, {
       headers: { "Authorization": `Bearer ${token}` }
     });
+    if (res.status === 401) {
+      handleLogout();
+      return;
+    }
+    if (!res.ok) return;
     userApplications = await res.json();
     document.getElementById("appsBadge").innerText = userApplications.length;
     renderDrives();
@@ -285,15 +290,21 @@ async function loadUserStats() {
     const res = await fetch(`${API_BASE}/api/applications/stats`, {
       headers: { "Authorization": `Bearer ${token}` }
     });
+    if (res.status === 401) {
+      handleLogout();
+      return;
+    }
+    if (!res.ok) return;
     const stats = await res.json();
-    document.getElementById("statTotal").innerText = stats.total_applied;
-    document.getElementById("statOA").innerText = stats.oa_scheduled;
-    document.getElementById("statInterviews").innerText = stats.interview_shortlisted;
-    document.getElementById("statOffers").innerText = stats.offered;
+    document.getElementById("statTotal").innerText = stats.total_applied ?? 0;
+    document.getElementById("statOA").innerText = stats.oa_scheduled ?? 0;
+    document.getElementById("statInterviews").innerText = stats.interview_shortlisted ?? 0;
+    document.getElementById("statOffers").innerText = stats.offered ?? 0;
   } catch (err) {
     console.error(err);
   }
 }
+
 
 function renderApplications() {
   const container = document.getElementById("appsList");
