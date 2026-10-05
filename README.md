@@ -1,61 +1,96 @@
-# Campus Placement & Job Tracker
+# Campus Placement & SDE Intern Tracker
 
-A full-stack web application designed for engineering students to track on-campus recruitment drives, eligibility cutoffs, online assessments, and interview round progressions.
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Online-success?style=for-the-badge&logo=railway)](https://placement-tracker-production-2c01.up.railway.app)
+[![API Docs](https://img.shields.io/badge/API_Docs-Swagger-009688?style=for-the-badge&logo=fastapi)](https://placement-tracker-production-2c01.up.railway.app/docs)
+[![GitHub](https://img.shields.io/badge/GitHub-Thota--Usha-181717?style=for-the-badge&logo=github)](https://github.com/Thota-Usha/placement-tracker)
+
+> 🚀 **Live Deployed Website:** [https://placement-tracker-production-2c01.up.railway.app](https://placement-tracker-production-2c01.up.railway.app)  
+> 📖 **Interactive Swagger API Docs:** [https://placement-tracker-production-2c01.up.railway.app/docs](https://placement-tracker-production-2c01.up.railway.app/docs)
 
 ---
 
-## Project Structure
+## 📌 Project Overview
+
+A production-grade full-stack web application designed for engineering students to manage and track campus recruitment drives, verify CGPA eligibility cutoffs, schedule online assessments, and visualize real-time interview round progressions.
+
+### 🌟 Key Highlights
+* **Automated Eligibility Checking:** Compares student CGPA against company minimum cutoffs before allowing application submission.
+* **Stateless JWT Authentication:** Secure login and registration with bcrypt password hashing and token-based protected endpoints.
+* **Relational Database Design:** Normalized schemas with foreign keys linking `Users` -> `CompanyDrives` -> `Applications`.
+* **Dynamic Pipeline State Machine:** Real-time progression through `Applied` → `OA Scheduled` → `Interview Shortlisted` → `Offered 🎉` / `Rejected`.
+* **Interactive UI:** Responsive dashboard built with Tailwind CSS, live search & package filters, dynamic pipeline metrics, and preparation notes.
+
+---
+
+## 🛠️ Tech Stack
+
+* **Backend:** Python 3.13, FastAPI, Uvicorn
+* **Database & ORM:** SQLAlchemy ORM, SQLite (local) / PostgreSQL ready
+* **Authentication:** JSON Web Tokens (PyJWT), Bcrypt password encryption
+* **Frontend:** HTML5, Tailwind CSS, FontAwesome, JavaScript (Fetch API)
+* **Cloud Deployment:** Railway (Continuous Deployment from GitHub)
+
+---
+
+## 📁 Project Structure
 
 ```
 placement-tracker/
-├── .vscode/                 # Pre-configured VS Code settings & F5 debugger
-│   ├── launch.json
-│   └── settings.json
+├── api/                     # Cloud serverless entrypoint
+│   └── index.py
 ├── backend/                 # Python FastAPI Backend
 │   ├── app/
-│   │   ├── auth.py          # JWT Token authentication & password hashing (bcrypt)
-│   │   ├── database.py      # SQLAlchemy SQLite/PostgreSQL engine
-│   │   ├── models.py        # Database entities (User, CompanyDrive, Application)
-│   │   ├── schemas.py       # Pydantic request/response schemas
-│   │   ├── main.py          # FastAPI application entrypoint & seed data
+│   │   ├── auth.py          # Password hashing (bcrypt) & JWT token handling
+│   │   ├── database.py      # Database engine & session provider
+│   │   ├── models.py        # SQLAlchemy relational entities
+│   │   ├── schemas.py       # Pydantic validation schemas
+│   │   ├── main.py          # FastAPI application & pre-seeded company drives
 │   │   └── routers/
 │   │       ├── auth_router.py   # Signup, Login, Profile endpoints
-│   │       ├── drives_router.py # Browse & search campus recruitment drives
-│   │       └── apps_router.py   # Student application tracking & stats
-│   ├── requirements.txt     # Python dependencies
-│   └── venv/                # Dedicated virtual environment
-├── frontend/                # Interactive Tailwind Dashboard
-│   ├── index.html
-│   └── app.js
-├── run.bat                  # One-click Windows desktop launcher (Port 8080)
+│   │       ├── drives_router.py # Browse & search recruitment drives
+│   │       └── apps_router.py   # Application tracking & metrics
+│   ├── requirements.txt
+│   └── venv/
+├── frontend/                # Interactive Web Dashboard
+│   ├── index.html           # Responsive client dashboard
+│   └── app.js               # Client application logic
+├── .vscode/                 # VS Code launch & settings
+├── requirements.txt         # Root deployment dependencies
+├── run.bat                  # One-click Windows desktop launcher
 └── README.md
 ```
 
 ---
 
-## How to Run the Project (3 Easy Ways)
+## 💻 How to Run Locally
 
-### Option 1: Double-Click `run.bat` (Easiest)
-Simply double-click the **`run.bat`** file on your Desktop. It will start the server and automatically launch your browser!
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Thota-Usha/placement-tracker.git
+   cd placement-tracker
+   ```
 
-### Option 2: From VS Code (F5)
-1. Open this folder in VS Code (`File -> Open Folder -> Desktop -> placement-tracker`).
-2. Press **F5** (or go to Run & Debug tab and click the Green Play button).
+2. **One-Click Run (Windows):**
+   Simply double-click the `run.bat` file in the project folder.
 
-### Option 3: From Terminal
-```powershell
-cd "C:\Users\USHA SREE\Desktop\placement-tracker\backend"
-.\venv\Scripts\Activate.ps1
-uvicorn app.main:app --reload --port 8080
-```
+3. **Or run manually via terminal:**
+   ```powershell
+   cd backend
+   .\venv\Scripts\Activate.ps1
+   uvicorn app.main:app --reload --port 8080
+   ```
+
+4. **Open in your browser:**
+   * Dashboard: `http://127.0.0.1:8080`
+   * Swagger Docs: `http://127.0.0.1:8080/docs`
+
+### 🔑 Demo Credentials Pre-Loaded:
+* **Email:** `demo@student.edu`
+* **Password:** `password123`
+* Pre-seeded with recruitment drives from **Google, Microsoft, Amazon, Oracle, and JPMorgan Chase**.
 
 ---
 
-## Access the Web App & APIs
-* 👉 **Web Dashboard:** [http://127.0.0.1:8080](http://127.0.0.1:8080)
-* 👉 **Interactive Swagger Docs:** [http://127.0.0.1:8080/docs](http://127.0.0.1:8080/docs)
-
-### Demo Credentials Pre-Loaded
-- **Email:** `demo@student.edu`
-- **Password:** `password123`
-- Pre-populated with recruitment drives from **Google, Microsoft, Amazon, Oracle, and JPMorgan Chase**.
+## 👩‍💻 Author
+* **Ushasree Thota**  
+* GitHub: [@Thota-Usha](https://github.com/Thota-Usha)
